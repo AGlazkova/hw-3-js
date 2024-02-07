@@ -1,139 +1,97 @@
 ## retake-3-js
 
-#### 1. Custom Array.prototype.filter
+#### 1. Анаграмма
 ```js
-function customFilter(array, filterFn, inplace = false) {
-    if (inplace) {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (!filterFn(array[i], i, array)) {
-                array.splice(i, 1);
-            }
-        }
-        return array;
-    } 
-    else {
-        const filteredArray = [];
-        for (let i = 0; i < array.length; i++) {
-            if (filterFn(array[i], i, array)) {
-                filteredArray.push(array[i]);
-            }
-        }
-        return filteredArray;
-    }
+ function anagram(srt1, str2) {
+  const srt1Prepared = srt1.replace(/[^\w\s]|_/g, "").toLowerCase().split('').sort().join('');
+  const srt2Prepared = str2.replace(/[^\w\s]|_/g, "").toLowerCase().split('').sort().join('');
+  
+  return srt1Prepared === srt2Prepared;
 }
 
 
-const words = ['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present'];
-const result = customFilter(words, (word) => word.length > 6);
-console.log(result) 
+console.log(anagram('finder', 'Friend')); // true
+console.log(anagram('hello', 'bye')); // false
+
 ```
 
 
-#### 2. Ключи и свойства
+#### 3. Палиндром
 ```js
-function solutionFn(object) { 
-  const resultObj = {}; 
-  for (let key in object) { 
-    const type = typeof object[key]; 
-    if (resultObj[type]) { 
-      resultObj[type]++; 
-    } else {
-      resultObj[type] = 1; 
+function isPalindrome(str){
+  let start = 0;
+  let end = str.length-1;
+  while(start < end){
+    if(str[start].toLowerCase() !== str[end].toLowerCase()) return false;
+    start++;
+    end--;
+  }
+  return true;
+}
+
+
+```
+
+
+#### 6. FizzBuzz
+```js
+function fizzBuzz(n) {
+  for (let i = 1; i<= n; i++){
+   if (i % 3 === 0 && i % 5 === 0) {
+     console.log('fizzbuzz')     
+      } else if (i % 3 === 0) {
+        console.log('fizz')
+      } 
+       else if (i % 5 === 0) {
+        console.log('buzz')
+      } else {
+       console.log(i)
+      }
     }
   }
-  return resultObj;
-};
 
-const initialObj = {
-  a: 'some string 1',
-    b: 42,
-    c: { c1: 'some string 2' },
-    d: [],
-    e: 123,
-};
-const resultObj = solutionFn(initialObj);
-console.log(resultObj) 
+
+fizzBuzz(15);
 ```
 
 
-#### 3. Больше никаких шуток про 1 + '1' === '11'
+#### 8. Симметрическая разность множеств
 ```js
-function sum(a, b) {
-    const isNumLeft = typeof a === 'number'
-    const isNumRight = typeof b === 'number'
+function symmetricDifference(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+  const result = [];
 
-    if (isNumLeft & isNumRight) {
-        return a + b;
-    } else if (!isNumRight & isNumLeft) {
-        throw new Error("The right operand is not number");
-    } else if (!isNumLeft & isNumRight) {
-        throw new Error("The left operand is not number");
-    } else { 
-      throw new Error("Operands are not numbers"); 
-    }
-}
-
-
-console.log(sum(1, 1))
-```
-
-
-#### 4. CVS на минималках
-```js
-function getMinimalCVS(array) {
-  const history = [array.slice()] 
-  return {
-    head: () => array.slice(), 
-    history: () => history.slice(), 
-    push: (new_entry) => {
-      array.push(new_entry); 
-      history.push(array.slice());
-    }, 
-    pop: () => {
-      const new_entry = array.pop();
-      history.push(array.slice()); 
-      return new_entry 
-    }
-  };
-}
-
-
-const cvs = getMinimalCVS(['a', 'b', 'c']);
-
-console.log(cvs.head());    // ['a', 'b', 'c']
-console.log(cvs.pop());     // 'c'
-
-cvs.push('d');
-cvs.push('e');
-
-console.log(cvs.head());    // ['a', 'b', 'd', 'e']
-console.log(cvs.history());
-/**
- * [
- *   ['a', 'b', 'c'],
- *   ['a', 'b'],
- *   ['a', 'b', 'd'],
- *   ['a', 'b', 'd', 'e']
- * ]
- */
-```
-
-
-#### 6. Hit Or Run
-```js
-function hitOrRun(a, b) {
-  let randomNumber = Math.floor(Math.random() * (b - a + 1)) + a; 
-  if (randomNumber < 2) { 
-    return "hit";
-  }
-  for (let divisor = 2; divisor <= Math.sqrt(randomNumber); divisor++) { 
-    if (randomNumber % divisor === 0) {
-      return "hit" + '\n' + randomNumber; 
+  for (const num of arr1) {
+    if (!set2.has(num)) {
+      result.push(num);
     }
   }
-  return "run" + '\n' + randomNumber;
+
+  for (const num of arr2) {
+    if (!set1.has(num)) {
+      result.push(num);
+    }
+  }
+
+  return result;
 }
 
 
-console.log(hitOrRun(5, 16))
+symmetricDifference([1, 5, 4, 2], [8, 91, 4, 1, 3]); // [5, 2, 8, 91, 3]
+symmetricDifference([1, 5, 4, 2], [7, 12]); // [1, 5, 4, 2, 7, 12]
+symmetricDifference([1, 5, 4, 2], [4, 1, 2, 5]); // []
+```
+
+
+#### 7. Уникальные числа
+```js
+const a = [1, 2, 3, 4, 3, 5, 7, 3, 2];
+    
+const arr = a.filter(function(item) {
+  return a.lastIndexOf(item) == a.indexOf(item);
+});
+
+console.log(arr);
+
 ```
